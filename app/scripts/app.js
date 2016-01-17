@@ -14,7 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // and give it some initial binding values
   // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
   var app = document.querySelector('#app');
-
+  var model = new Firebase('https://gume.firebaseio.com');
   // Sets app default base URL
   app.baseUrl = '/';
   if (window.location.port === '') {  // if production
@@ -39,6 +39,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // See https://github.com/Polymer/polymer/issues/1381
   window.addEventListener('WebComponentsReady', function() {
     // imports are loaded and elements have been registered
+    model.onAuth(function(authData) {
+      if (authData) {
+        var toast = document.getElementById('successToast');
+        
+        app.authData = authData;
+        app.set('isLoggedIn', true);
+        if (toast) {
+          toast.text = 'Welcome back ' + authData.password.email + '!!!';
+          toast.show();
+        }
+      } else {
+        app.set('isLoggedIn', false);
+      }
+    });
   });
 
   // Main area's paper-scroll-header-panel custom condensing transformation of
@@ -78,9 +92,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     app.$.paperDrawerPanel.closeDrawer();
   };
 
-  app.goToUrl = function(event) {
-    var url = event.target.getAttribute('url');
-    var target = event.target.getAttribute('target');
+  app.goToUrl = function(e) {
+    var url = e.target.getAttribute('url');
+    var target = e.target.getAttribute('target');
     
     if (url && url !== '') {
       window.setTimeout(function() {
@@ -94,14 +108,66 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
   };
 
-  app.openDialog = function(event) {
-    var dialogId = event.target.getAttribute('dialog');
+  app.openDialog = function(e) {
+    var dialogId = e.target.getAttribute('dialog');
 
     if (dialogId && dialogId !== '') {
       var dialog = document.getElementById(dialogId);
       if (dialog) {
         dialog.open();      
       }
+    }
+  };
+
+  app.submitForm = function(e) {
+    var frmId = e.target.getAttribute('data-form');
+
+    if (frmId && frmId !== '') {
+      var frm = document.getElementById(frmId);
+      if (frm) {
+        frm.submit();
+      }
+    }
+  };
+
+  app.handleLogin = function(e) {
+    var email = document.getElementById('txtEmail');
+    var password = document.getElementById('txtPassword');
+
+    e.target.disabled = true;
+    if (email.validate() && password.validate()) {
+      model.authWithPassword({
+        email: email.value,
+        password: password.value
+      }, function(error, authData) {
+        e.target.disabled = false;
+        if (authData) {
+          var dialogLogin = document.getElementById('modalLogin');
+          if (dialogLogin) {
+            dialogLogin.close();
+          }
+        } else {
+          app.$.errToast.text = 'Email hoặc password không chính xác, vui lòng thử lại!';
+          app.$.errToast.show();
+        }
+      });
+    } else {
+      e.target.disabled = false;
+      app.$.errToast.text = 'Có lỗi xảy ra, vui lòng thử lại!';
+      app.$.errToast.show();
+    }
+  };
+
+  app.handleLogout = function() {
+    app.$.successToast.text = 'Goodbye ' + app.authData.password.email + '!!!';
+    app.$.successToast.show();
+    model.unauth();
+  };
+
+  app.properties = {
+    isLoggedIn: {
+      type: Boolean,
+      value: false
     }
   };
 

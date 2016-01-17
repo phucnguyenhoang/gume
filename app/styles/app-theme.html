@@ -124,6 +124,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     color: #eeff41;
     margin: 10px;
   }
+  #errToast paper-icon-button {
+    color: #eeff41;
+  }
 
   /* Styling for dialog */
   paper-dialog {
@@ -131,6 +134,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   }
   paper-dialog.dialog-login .buttons {
     margin: 25px 10px 20px 10px;
+  }
+
+  [loggedInOnly=true] {
+    display: none;
   }
 
   /* Breakpoints */
@@ -141,6 +148,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   .btn-social-login {
     width: 50px;
     height: 50px;
+  }
+  .toast-error {
+    --paper-toast-background-color: var(--paper-red-900);
+    --paper-toast-color: white;
+  }
+  .toast-success {
+    --paper-toast-background-color: var(--paper-blue-900);
+    --paper-toast-color: white;
   }
 
   /* Small */
@@ -163,7 +178,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
     paper-dialog.dialog-login {
-      width: 100%;
+      width: 90%;
+      max-width: 90%;
     }
 
   }

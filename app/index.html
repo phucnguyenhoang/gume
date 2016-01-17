@@ -48,6 +48,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
   <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
   <!-- endbuild -->
 
   <!-- will be replaced with elements/elements.vulcanized.html -->
@@ -106,7 +107,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-menu-button horizontal-offset="-70">
             <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
             <paper-menu class="dropdown-content right-control">
-              <paper-item dialog="modalLogin" on-tap="openDialog">Đăng nhập</paper-item>
+              <paper-item on-tap="handleLogout" hidden$="{{!isLoggedIn}}">Đăng xuất</paper-item>
+              <paper-item dialog="modalLogin" on-tap="openDialog" hidden$="{{isLoggedIn}}">Đăng nhập</paper-item>
             </paper-menu>
           </paper-menu-button>
 
@@ -128,12 +130,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <section data-route="home">
               <paper-material elevation="1">
-                <my-greeting></my-greeting>
-
-                <p class="paper-font-subhead">You now have:</p>
-                <my-list></my-list>
-
-                <p class="paper-font-body2">Looking for more Web App layouts? Check out our <a href="https://github.com/PolymerElements/app-layout-templates">layouts</a> collection. You can also <a href="http://polymerelements.github.io/app-layout-templates/">preview</a> them live.</p>
+                <p>{{isLoggedIn}}</p>
               </paper-material>
               <paper-material elevation="1">
                 <p class="paper-font-body2">This is another card.</p>
@@ -185,7 +182,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </paper-drawer-panel>
 
     <paper-toast id="toast">
-      <span class="toast-hide-button" role="button" tabindex="0" onclick="app.$.toast.hide()">Ok</span>
+      <paper-icon-button icon="done" onclick="app.$.toast.hide()" tabindex="0"></paper-icon-button>
+    </paper-toast>
+    <paper-toast id="successToast" class="toast-success">
+      <paper-icon-button icon="done" onclick="app.$.successToast.hide()" tabindex="0"></paper-icon-button>
+    </paper-toast>
+    <paper-toast id="errToast" class="toast-error">
+      <paper-icon-button icon="done" onclick="app.$.errToast.hide()" tabindex="0"></paper-icon-button>
     </paper-toast>
 
     <!-- Uncomment next block to enable Service Worker support (1/2) -->
@@ -209,8 +212,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <paper-dialog id="modalLogin" class="dialog-login" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
       <h2>Đăng nhập</h2>
       <div>
-        <form method="post" action="/admin/auth" accept-charset="utf-8" id="frmLogin">
-          <paper-input class="short" label="Email" id="txtEmail" type="email" name="email" required auto-validate error-message="Please enter your email." char-counter maxlength="250" autofocus>
+        <form is="iron-form" accept-charset="utf-8" id="frmLogin" method="post">
+          <paper-input class="short" label="Email" id="txtEmail" type="email" name="email" required auto-validate error-message="Please enter your email." char-counter maxlength="250">
               <iron-icon icon="mail" prefix></iron-icon>
           </paper-input>
 
@@ -221,7 +224,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button dialog-confirm autofocus raised class="btn-primary">
+        <paper-button autofocus raised class="btn-primary" on-tap="handleLogin">
           <iron-icon icon="send"></iron-icon> Login
         </paper-button>
       </div>
