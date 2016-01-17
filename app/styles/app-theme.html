@@ -125,7 +125,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     margin: 10px;
   }
 
+  /* Styling for dialog */
+  paper-dialog {
+    --paper-dialog-background-color: white;
+  }
+  paper-dialog.dialog-login .buttons {
+    margin: 25px 10px 20px 10px;
+  }
+
   /* Breakpoints */
+  .btn-primary {
+    background-color: var(--paper-blue-900);
+    color: white;
+  }
+  .btn-social-login {
+    width: 50px;
+    height: 50px;
+  }
 
   /* Small */
   @media (max-width: 600px) {
@@ -146,6 +162,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       margin-left: 16px;
     }
 
+    paper-dialog.dialog-login {
+      width: 100%;
+    }
+
   }
 
   /* Tablet+ */
@@ -164,6 +184,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     iron-pages {
       padding: 48px 62px;
+    }
+
+    paper-dialog.dialog-login {
+      width: 520px;
     }
 
   }

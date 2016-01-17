@@ -9,7 +9,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<html lang="">
+<html lang="vn">
 
 <head>
   <meta charset="utf-8">
@@ -74,20 +74,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!-- Drawer Content -->
         <paper-menu class="list" attr-for-selected="data-route" selected="[[route]]">
-          <a data-route="home" href="{{baseUrl}}">
-            <iron-icon icon="home"></iron-icon>
-            <span>Home</span>
-          </a>
+          <template is="dom-if" if="{{!prefix}}">
+            <a data-route="home" href="{{baseUrl}}">
+              <iron-icon icon="home"></iron-icon>
+              <span>Home</span>
+            </a>
 
-          <a data-route="users" href="{{baseUrl}}users">
-            <iron-icon icon="info"></iron-icon>
-            <span>Users</span>
-          </a>
+            <a data-route="users" href="{{baseUrl}}users">
+              <iron-icon icon="info"></iron-icon>
+              <span>Users</span>
+            </a>
 
-          <a data-route="contact" href="{{baseUrl}}contact">
-            <iron-icon icon="mail"></iron-icon>
-            <span>Contact</span>
-          </a>
+            <a data-route="contact" href="{{baseUrl}}contact">
+              <iron-icon icon="mail"></iron-icon>
+              <span>Contact</span>
+            </a>
+          </template>
         </paper-menu>
       </paper-scroll-header-panel>
 
@@ -100,8 +102,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <span class="flex"></span>
 
           <!-- Toolbar icons -->
-          <paper-icon-button icon="refresh"></paper-icon-button>
           <paper-icon-button icon="search"></paper-icon-button>
+          <paper-menu-button horizontal-offset="-70">
+            <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
+            <paper-menu class="dropdown-content right-control">
+              <paper-item dialog="modalLogin" on-tap="openDialog">Đăng nhập</paper-item>
+            </paper-menu>
+          </paper-menu-button>
 
           <!-- Application name -->
           <div class="middle middle-container center horizontal layout">
@@ -134,21 +141,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
               <paper-material elevation="1" class="paper-font-body2">
                 <h1 id="license">License</h1>
-                <p>Everything in this repo is BSD style license unless otherwise specified.</p>
-                <p>Copyright (c) 2015 The Polymer Authors. All rights reserved.</p>
-                <p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
-                <ul>
-                <li>Redistributions of source code must retain the above copyright
-                notice, this list of conditions and the following disclaimer.</li>
-                <li>Redistributions in binary form must reproduce the above
-                copyright notice, this list of conditions and the following disclaimer
-                in the documentation and/or other materials provided with the
-                distribution.</li>
-                <li>Neither the name of Google Inc. nor the names of its
-                contributors may be used to endorse or promote products derived from
-                this software without specific prior written permission.</li>
-                </ul>
-                <p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
               </paper-material>
 
             </section>
@@ -178,6 +170,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </paper-material>
             </section>
 
+            <section data-route="adminHome">
+              <paper-material elevation="1">
+                <h2 class="page-title">Admin</h2>
+                
+                <h1>{{route}}</h1>
+                <h1>{{prefix}}</h1>
+              </paper-material>
+            </section>
+
           </iron-pages>
         </div>
       </paper-scroll-header-panel>
@@ -204,6 +205,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </platinum-sw-register>
     -->
 
+    <!-- Difine dialog -->
+    <paper-dialog id="modalLogin" class="dialog-login" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+      <h2>Đăng nhập</h2>
+      <div>
+        <form method="post" action="/admin/auth" accept-charset="utf-8" id="frmLogin">
+          <paper-input class="short" label="Email" id="txtEmail" type="email" name="email" required auto-validate error-message="Please enter your email." char-counter maxlength="250" autofocus>
+              <iron-icon icon="mail" prefix></iron-icon>
+          </paper-input>
+
+          <paper-input class="short" label="Password" id="txtPassword" type="password" name="password" required auto-validate error-message="Please enter password" char-counter maxlength="100">
+              <iron-icon icon="lock" prefix></iron-icon>
+          </paper-input>
+        </form>
+      </div>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus raised class="btn-primary">
+          <iron-icon icon="send"></iron-icon> Login
+        </paper-button>
+      </div>
+      <div class="social">
+        <h4>Login with</h4>
+        <paper-icon-button class="btn-social-login" src="images/f_logo.png" alt="facebook" title="Facebook"></paper-icon-button>
+        <paper-icon-button class="btn-social-login" src="images/g_logo.png" alt="google" title="Google"></paper-icon-button>
+        <paper-icon-button class="btn-social-login" src="images/t_logo.png" alt="twitter" title="Twitter"></paper-icon-button>
+        <paper-icon-button class="btn-social-login" src="images/git_logo.png" alt="github" title="Github"></paper-icon-button>
+      </div>
+    </paper-dialog>
   </template>
 
   <!-- build:js scripts/app.js -->

@@ -78,4 +78,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     app.$.paperDrawerPanel.closeDrawer();
   };
 
+  app.goToUrl = function(event) {
+    var url = event.target.getAttribute('url');
+    var target = event.target.getAttribute('target');
+    
+    if (url && url !== '') {
+      window.setTimeout(function() {
+        if (target && target !== '') {
+          var win = window.open(url, target);
+          win.focus();
+        } else {
+          window.location = url;
+        }
+      }, 300);
+    }
+  };
+
+  app.openDialog = function(event) {
+    var dialogId = event.target.getAttribute('dialog');
+
+    if (dialogId && dialogId !== '') {
+      var dialog = document.getElementById(dialogId);
+      if (dialog) {
+        dialog.open();      
+      }
+    }
+  };
+
 })(document);

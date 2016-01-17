@@ -1,0 +1,9 @@
+{
+  "firebase": "gume",
+  "public": "dict",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
